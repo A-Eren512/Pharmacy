@@ -23,7 +23,15 @@ export default function NobetciEczaneler() {
       });
   }, []);
 
-  if (loading) return <p>Yükleniyor...</p>;
+  if (loading) {
+    return (
+      <div className="loading-container">
+        <div className="spinner"></div>
+        <p className="loading-text">Yükleniyor...</p>
+      </div>
+    );
+  }
+
   if (hata) return <p>Hata: {hata}</p>;
 
   const kendiBolgeEczaneleri = eczaneler.filter((e) => e.BolgeId === 42);
