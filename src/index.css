@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap");
+
 * {
   padding: 0;
   margin: 0;
@@ -5,7 +7,7 @@
 }
 
 body {
-  font-family: sans-serif;
+  font-family: "Nunito", sans-serif;
   color: #343a40;
   line-height: 1;
   position: relative;
@@ -194,6 +196,10 @@ body {
 
 .box {
   font-size: 25px;
+}
+
+strong {
+  color: #000000;
 }
 
 .box2 {
