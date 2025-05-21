@@ -14,7 +14,6 @@ export default function NobetciEczaneler() {
       })
       .then((data) => {
         setEczaneler(data);
-        console.log(data);
         setLoading(false);
       })
       .catch((error) => {
@@ -167,7 +166,7 @@ function AccordionItemDigerBolge({
   const googleMapsUrl = `https://www.google.com/maps?q=${latitude},${longitude}`;
 
   return (
-    <div className="item open">
+    <div className="item2 open">
       <div className="image">
         <p>
           <img src="./images/pharmacy.png" alt="pharmacy-logo" />
