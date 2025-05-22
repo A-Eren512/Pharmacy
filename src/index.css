@@ -310,6 +310,25 @@ strong {
   display: none;
 }
 
+.no-eczane-message {
+  grid-column: span 1;
+  background-color: #f8d7da;
+  color: #721c24;
+  font-weight: bold;
+  padding: 20px;
+  border: 2px solid #f5c6cb;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-size: 18px;
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
+  line-height: 30px;
+  letter-spacing: 2px;
+  word-spacing: 2px;
+}
+
 .loading-container {
   display: flex;
   flex-direction: column;

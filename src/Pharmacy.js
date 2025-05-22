@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { QRCodeCanvas } from "qrcode.react"; // QR kod bileşeni
+import { QRCodeCanvas } from "qrcode.react";
 
 export default function NobetciEczaneler() {
   const [eczaneler, setEczaneler] = useState([]);
@@ -14,6 +14,7 @@ export default function NobetciEczaneler() {
       })
       .then((data) => {
         setEczaneler(data);
+        console.log(data);
         setLoading(false);
       })
       .catch((error) => {
@@ -33,46 +34,61 @@ export default function NobetciEczaneler() {
 
   if (hata) return <p>Hata: {hata}</p>;
 
-  const kendiBolgeEczane = eczaneler.find((e) => e.BolgeId === 42);
-  const digerBolgelerEczaneleri = eczaneler
-    .filter((e) => [0, 37, 65, 44, 58].includes(e.BolgeId))
-    .slice(0, 4);
+  const kendiBolgeEczaneleri = eczaneler.filter((e) => e.BolgeId === 42);
+  const kendiSecilenEczane =
+    kendiBolgeEczaneleri.length > 0
+      ? kendiBolgeEczaneleri.sort((a, b) => a.Adi.localeCompare(b.Adi))[0]
+      : null;
+  const hedefBolgeler = [37, 65, 44, 58];
+  const digerBolgelerEczaneleri = hedefBolgeler.map((bolgeId) => {
+    const bolgedekiEczaneler = eczaneler.filter((e) => e.BolgeId === bolgeId);
+    const secilenEczane =
+      bolgedekiEczaneler.length > 0
+        ? bolgedekiEczaneler.sort((a, b) => a.Adi.localeCompare(b.Adi))[0]
+        : null;
+    return {
+      bolgeId,
+      eczane: secilenEczane,
+    };
+  });
 
   return (
     <div>
       <div className="accordion-wrapper">
         <div className="accordion-section">
-          {/* Kendi Bölgenizdeki Tek Eczane */}
-          {kendiBolgeEczane && (
-            <div className="accordion">
-              <div className="sentences">
-                <h2 className="section-title">Bölgenizdeki Nöbetçi Eczane</h2>
-                <div className="mainHour">
-                  <Hour />
-                </div>
+          <div className="accordion">
+            <div className="sentences">
+              <h2 className="section-title">Bölgenizdeki Nöbetçi Eczane</h2>
+              <div className="mainHour">
+                <Hour />
               </div>
-              <AccordionItemKendiBolge
-                key={`kendi-${kendiBolgeEczane.Adi}`}
-                title={kendiBolgeEczane.Adi}
-                latitude={kendiBolgeEczane.LokasyonX}
-                longitude={kendiBolgeEczane.LokasyonY}
-                adres={kendiBolgeEczane.Adres}
-                telefon={kendiBolgeEczane.Telefon}
-                bolgeId={kendiBolgeEczane.BolgeId}
-                bolge={kendiBolgeEczane.Bolge}
-              />
             </div>
-          )}
+            {kendiSecilenEczane ? (
+              <AccordionItemKendiBolge
+                key={`kendi-${kendiSecilenEczane.Adi}`}
+                title={kendiSecilenEczane.Adi}
+                latitude={kendiSecilenEczane.LokasyonX}
+                longitude={kendiSecilenEczane.LokasyonY}
+                adres={kendiSecilenEczane.Adres}
+                telefon={kendiSecilenEczane.Telefon}
+                bolgeId={kendiSecilenEczane.BolgeId}
+                bolge={kendiSecilenEczane.Bolge}
+              />
+            ) : (
+              <div className="no-eczane-message">
+                BÖLGENİZDE NÖBETÇİ ECZANE BULUNAMADI.
+              </div>
+            )}
+          </div>
         </div>
 
-        {/* Diğer Bölgelerden 4 Eczane */}
-        {digerBolgelerEczaneleri.length > 0 && (
-          <div className="accordion1">
-            <h2 className="section-title2">
-              Diğer Bölgelerdeki Nöbetçi Eczaneler
-            </h2>
-            <div className="accordion2">
-              {digerBolgelerEczaneleri.map((eczane, index) => (
+        <div className="accordion1">
+          <h2 className="section-title2">
+            Diğer Bölgelerdeki Nöbetçi Eczaneler
+          </h2>
+          <div className="accordion2">
+            {digerBolgelerEczaneleri.map(({ bolgeId, eczane }, index) =>
+              eczane ? (
                 <AccordionItemDigerBolge
                   key={`diger-${index}`}
                   title={eczane.Adi}
@@ -83,27 +99,28 @@ export default function NobetciEczaneler() {
                   bolgeId={eczane.BolgeId}
                   bolge={eczane.Bolge}
                 />
-              ))}
-            </div>
+              ) : (
+                <div key={`bos-${index}`} className="no-eczane-message item2">
+                  BU BÖLGEDE NÖBETÇİ ECZANE BULUNAMADI.
+                </div>
+              )
+            )}
           </div>
-        )}
+        </div>
       </div>
     </div>
   );
 }
 
-// Bölge 42 için accordion
 function AccordionItemKendiBolge({
   title,
   latitude,
   longitude,
   adres,
   telefon,
-  bolgeId,
   bolge,
 }) {
   const googleMapsUrl = `https://www.google.com/maps?q=${latitude},${longitude}`;
-
   return (
     <div className="item open featured">
       <div className="image">
@@ -116,7 +133,6 @@ function AccordionItemKendiBolge({
         <span className="badge">Sizin Bölgeniz</span>
       </p>
       <p className="icon">-</p>
-
       <div className="content-box">
         <div className="box">
           <p>
@@ -124,7 +140,7 @@ function AccordionItemKendiBolge({
             <br />
             <strong>Telefon:</strong> {telefon}
             <br />
-            <strong>İlçe: </strong> {bolge}
+            <strong>İlçe:</strong> {bolge}
             <br />
             <strong className="location">Enlem: {latitude}</strong>
             <br />
@@ -134,11 +150,7 @@ function AccordionItemKendiBolge({
         <div className="qrCode">
           <QRCodeCanvas value={googleMapsUrl} size={128} />
           <p
-            style={{
-              fontSize: "15px",
-              textAlign: "center",
-              fontWeight: "600",
-            }}
+            style={{ fontSize: "15px", textAlign: "center", fontWeight: "600" }}
           >
             Konum için <br /> QR Kod
           </p>
@@ -148,18 +160,15 @@ function AccordionItemKendiBolge({
   );
 }
 
-// Diğer bölgeler için accordion
 function AccordionItemDigerBolge({
   title,
   latitude,
   longitude,
   adres,
   telefon,
-  bolgeId,
   bolge,
 }) {
   const googleMapsUrl = `https://www.google.com/maps?q=${latitude},${longitude}`;
-
   return (
     <div className="item2 open">
       <div className="image">
@@ -169,7 +178,6 @@ function AccordionItemDigerBolge({
       </div>
       <p className="text">{title}</p>
       <p className="icon">-</p>
-
       <div className="content-box2">
         <div className="box2">
           <p>
@@ -177,7 +185,7 @@ function AccordionItemDigerBolge({
             <br />
             <strong>Telefon:</strong> {telefon}
             <br />
-            <strong>İlçe: </strong> {bolge}
+            <strong>İlçe:</strong> {bolge}
             <br />
             <strong className="location">Enlem: {latitude}</strong>
             <br />
@@ -189,11 +197,7 @@ function AccordionItemDigerBolge({
         </div>
         <div className="font">
           <p
-            style={{
-              fontSize: "18px",
-              textAlign: "center",
-              fontWeight: "600",
-            }}
+            style={{ fontSize: "18px", textAlign: "center", fontWeight: "600" }}
           >
             Konum için QR Kod
           </p>
@@ -203,7 +207,6 @@ function AccordionItemDigerBolge({
   );
 }
 
-// Saat bileşeni
 function Hour() {
   const [time, setTime] = useState(new Date());
   const today = new Date().toLocaleDateString("tr-TR");
