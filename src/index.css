@@ -195,6 +195,7 @@ body {
 }
 
 .box {
+  border-top: 2px solid rgba(0, 0, 0, 0.8);
   font-size: 25px;
 }
 
@@ -203,6 +204,7 @@ strong {
 }
 
 .box2 {
+  border-top: 2px solid rgba(0, 0, 0, 0.6);
   font-weight: 600;
 }
 
