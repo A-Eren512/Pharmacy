@@ -103,6 +103,7 @@ body {
 
 .sentences {
   display: flex;
+  justify-content: center;
 }
 
 .mainHour {
