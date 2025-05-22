@@ -33,43 +33,39 @@ export default function NobetciEczaneler() {
 
   if (hata) return <p>Hata: {hata}</p>;
 
-  const kendiBolgeEczaneleri = eczaneler.filter((e) => e.BolgeId === 42);
-  const digerBolgelerEczaneleri = eczaneler.filter((e) =>
-    [0, 37, 65, 44, 58].includes(e.BolgeId)
-  );
+  const kendiBolgeEczane = eczaneler.find((e) => e.BolgeId === 42);
+  const digerBolgelerEczaneleri = eczaneler
+    .filter((e) => [0, 37, 65, 44, 58].includes(e.BolgeId))
+    .slice(0, 4);
 
   return (
     <div>
       <div className="accordion-wrapper">
         <div className="accordion-section">
-          {/* Kendi Bölgenizdeki Eczaneler */}
-          {kendiBolgeEczaneleri.length > 0 && (
+          {/* Kendi Bölgenizdeki Tek Eczane */}
+          {kendiBolgeEczane && (
             <div className="accordion">
               <div className="sentences">
-                <h2 className="section-title">
-                  Bölgenizdeki Nöbetçi Eczaneler
-                </h2>
+                <h2 className="section-title">Bölgenizdeki Nöbetçi Eczane</h2>
                 <div className="mainHour">
                   <Hour />
                 </div>
               </div>
-              {kendiBolgeEczaneleri.map((eczane, index) => (
-                <AccordionItemKendiBolge
-                  key={`kendi-${index}`}
-                  title={eczane.Adi}
-                  latitude={eczane.LokasyonX}
-                  longitude={eczane.LokasyonY}
-                  adres={eczane.Adres}
-                  telefon={eczane.Telefon}
-                  bolgeId={eczane.BolgeId}
-                  bolge={eczane.Bolge}
-                />
-              ))}
+              <AccordionItemKendiBolge
+                key={`kendi-${kendiBolgeEczane.Adi}`}
+                title={kendiBolgeEczane.Adi}
+                latitude={kendiBolgeEczane.LokasyonX}
+                longitude={kendiBolgeEczane.LokasyonY}
+                adres={kendiBolgeEczane.Adres}
+                telefon={kendiBolgeEczane.Telefon}
+                bolgeId={kendiBolgeEczane.BolgeId}
+                bolge={kendiBolgeEczane.Bolge}
+              />
             </div>
           )}
         </div>
 
-        {/* Diğer Bölgelerdeki Eczaneler */}
+        {/* Diğer Bölgelerden 4 Eczane */}
         {digerBolgelerEczaneleri.length > 0 && (
           <div className="accordion1">
             <h2 className="section-title2">
@@ -137,7 +133,6 @@ function AccordionItemKendiBolge({
         </div>
         <div className="qrCode">
           <QRCodeCanvas value={googleMapsUrl} size={128} />
-
           <p
             style={{
               fontSize: "15px",
