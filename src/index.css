@@ -276,6 +276,7 @@ strong {
 }
 
 .section-title {
+  text-shadow: 2px 2px 3px black;
   border-top: 3px solid rgba(0, 0, 0, 0.6);
   border-bottom: 3px solid rgba(0, 0, 0, 0.6);
   word-spacing: 6px;
@@ -289,6 +290,7 @@ strong {
 }
 
 .section-title2 {
+  text-shadow: 2px 2px 3px black;
   border-top: 3px solid rgba(0, 0, 0, 0.6);
   border-bottom: 3px solid rgba(0, 0, 0, 0.6);
   margin-left: 540px;
