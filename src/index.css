@@ -22,7 +22,7 @@ body {
   display: grid;
   justify-content: center;
   align-items: center;
-  grid-template-columns: repeat(auto-fit minmax(300px, 1fr));
+  grid-template-columns: repeat(1, minmax(300px, 1fr));
   padding: 2rem 0;
   gap: 60px;
 }
@@ -180,7 +180,6 @@ body {
 
 .item {
   box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.6);
-  cursor: pointer;
   display: grid;
   grid-template-columns: auto 1fr auto;
   column-gap: 24px;
@@ -199,6 +198,10 @@ body {
   background-color: #ccf7e9;
   border: 4px solid hsl(162, 88%, 26%);
   border-radius: 20px;
+}
+
+.text-card {
+  max-width: 40ch;
 }
 
 /* === ITEM FEATURED END === */

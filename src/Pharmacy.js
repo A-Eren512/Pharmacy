@@ -93,11 +93,12 @@ function AccordionItemKendiBolge({
       <div className="content-box">
         <div className="box">
           <div className="header">
-            <p className="title">{title}</p>
+            <p className="title text-card">{title}</p>
             <span className="badge">Sizin Bölgeniz</span>
           </div>
-          <p>
-            <strong>Adres:</strong> {adres}
+          <p className="text-card">
+            <strong>Adres:</strong>
+            {adres}
             <br />
             <strong>Telefon:</strong> {telefon}
             <br />
