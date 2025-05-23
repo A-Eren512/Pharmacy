@@ -33,40 +33,46 @@ export default function NobetciEczaneler() {
 
   if (hata) return <p>Hata: {hata}</p>;
 
-  const kendiBolgeEczaneleri = eczaneler.filter((e) => e.BolgeId === 17);
+  const kendiBolgeEczaneleri = eczaneler.filter((e) => e.BolgeId === 42);
   const kendiSecilenEczane =
     kendiBolgeEczaneleri.length > 0
       ? kendiBolgeEczaneleri.sort((a, b) => a.Adi.localeCompare(b.Adi))[0]
       : null;
 
   return (
-    <div>
-      <div className="accordion-wrapper">
-        <div className="accordion-section">
-          <div className="accordion">
-            <div className="sentences">
-              <h2 className="section-title">Bölgenizdeki Nöbetçi Eczane</h2>
-              <div className="mainHour">
-                <Hour />
-              </div>
-            </div>
-            {kendiSecilenEczane ? (
-              <AccordionItemKendiBolge
-                key={`kendi-${kendiSecilenEczane.Adi}`}
-                title={kendiSecilenEczane.Adi}
-                latitude={kendiSecilenEczane.LokasyonX}
-                longitude={kendiSecilenEczane.LokasyonY}
-                adres={kendiSecilenEczane.Adres}
-                telefon={kendiSecilenEczane.Telefon}
-                bolgeId={kendiSecilenEczane.BolgeId}
-                bolge={kendiSecilenEczane.Bolge}
-              />
-            ) : (
-              <div className="no-eczane-message">
-                BÖLGENİZDE NÖBETÇİ ECZANE BULUNAMADI.
-              </div>
-            )}
+    <div className="accordion-wrapper">
+      <div className="accordion">
+        <div className="logo">
+          <img src="./images/pharmacy.png" alt="pharmacy" />
+        </div>
+        <div className="sentences">
+          <h2 className="section-title">Bölgenizdeki Nöbetçi Eczane</h2>
+        </div>
+        <div className="mainHour">
+          <Hour />
+        </div>
+        {kendiSecilenEczane ? (
+          <AccordionItemKendiBolge
+            key={`kendi-${kendiSecilenEczane.Adi}`}
+            title={kendiSecilenEczane.Adi}
+            latitude={kendiSecilenEczane.LokasyonX}
+            longitude={kendiSecilenEczane.LokasyonY}
+            adres={kendiSecilenEczane.Adres}
+            telefon={kendiSecilenEczane.Telefon}
+            bolgeId={kendiSecilenEczane.BolgeId}
+            bolge={kendiSecilenEczane.Bolge}
+          />
+        ) : (
+          <div className="no-eczane-message">
+            BÖLGENİZDE NÖBETÇİ ECZANE BULUNAMADI.
           </div>
+        )}
+      </div>
+      <div className="advertisement">
+        <div className="promo">
+          <img src="./images/reklam-1.jpg" alt="promo-1" />
+          <img src="./images/reklam-2.jpg" alt="promo-2" />
+          <img src="./images/reklam-3.jpg" alt="promo-3" />
         </div>
       </div>
     </div>
@@ -84,18 +90,20 @@ function AccordionItemKendiBolge({
   const googleMapsUrl = `https://www.google.com/maps?q=${latitude},${longitude}`;
   return (
     <div className="item open featured">
-      <div className="image">
-        <p>
-          <img src="./images/pharmacy.png" alt="pharmacy-logo" />
-        </p>
-      </div>
-      <p className="text">
-        {title}
-        <span className="badge">Sizin Bölgeniz</span>
-      </p>
-      <p className="icon">-</p>
       <div className="content-box">
         <div className="box">
+          <div className="header">
+            <p
+              style={{
+                color: "#087f5b",
+                fontWeight: "700",
+                borderBottom: "4px solid rgba(0, 0, 0, 0.6)",
+              }}
+            >
+              {title}
+            </p>
+            <span className="badge">Sizin Bölgeniz</span>
+          </div>
           <p>
             <strong>Adres:</strong> {adres}
             <br />
@@ -110,11 +118,11 @@ function AccordionItemKendiBolge({
         </div>
         <div className="qrCode">
           <QRCodeCanvas value={googleMapsUrl} size={128} />
-          <p
-            style={{ fontSize: "15px", textAlign: "center", fontWeight: "600" }}
-          >
-            Konum için <br /> QR Kod
-          </p>
+          <div className="qrText">
+            <p>
+              Konum için <br /> QR Kod
+            </p>
+          </div>
         </div>
       </div>
     </div>
