@@ -97,8 +97,7 @@ function AccordionItemKendiBolge({
             <span className="badge">Sizin Bölgeniz</span>
           </div>
           <p className="text-card2">
-            <strong>Adres:</strong>
-            {adres}
+            <strong>Adres:</strong> {adres}
             <br />
             <strong>Telefon:</strong> {telefon}
             <br />
