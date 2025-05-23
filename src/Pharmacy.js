@@ -88,6 +88,12 @@ function AccordionItemKendiBolge({
   bolge,
 }) {
   const googleMapsUrl = `https://www.google.com/maps?q=${latitude},${longitude}`;
+  function formatPhoneNumber(phone) {
+    const digits = phone.replace(/\D/g, "");
+
+    return digits.replace(/(\d{4})(\d{3})(\d{2})(\d{2})/, "$1 $2 $3 $4");
+  }
+
   return (
     <div className="item featured">
       <div className="content-box">
@@ -99,7 +105,7 @@ function AccordionItemKendiBolge({
           <p className="text-card2">
             <strong>Adres:</strong> {adres}
             <br />
-            <strong>Telefon:</strong> {telefon}
+            <strong>Telefon:</strong> {formatPhoneNumber(telefon)}
             <br />
             <strong>İlçe:</strong> {bolge}
             <br />
