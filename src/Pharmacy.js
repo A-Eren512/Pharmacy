@@ -46,7 +46,7 @@ export default function NobetciEczaneler() {
           <img src="./images/pharmacy.png" alt="pharmacy" />
         </div>
         <div className="sentences">
-          <h2 className="section-title">Bölgenizdeki Nöbetçi Eczane</h2>
+          <h2 className="section-title">BÖLGENİZDEKİ NÖBETÇİ ECZANE</h2>
         </div>
         <div className="mainHour">
           <Hour />
