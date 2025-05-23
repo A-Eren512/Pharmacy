@@ -40,7 +40,7 @@ export default function NobetciEczaneler() {
       : null;
 
   return (
-    <div className="accordion-wrapper">
+    <div className="accordion-container">
       <div className="accordion">
         <div className="logo">
           <img src="./images/pharmacy.png" alt="pharmacy" />
@@ -89,19 +89,11 @@ function AccordionItemKendiBolge({
 }) {
   const googleMapsUrl = `https://www.google.com/maps?q=${latitude},${longitude}`;
   return (
-    <div className="item open featured">
+    <div className="item featured">
       <div className="content-box">
         <div className="box">
           <div className="header">
-            <p
-              style={{
-                color: "#087f5b",
-                fontWeight: "700",
-                borderBottom: "4px solid rgba(0, 0, 0, 0.6)",
-              }}
-            >
-              {title}
-            </p>
+            <p className="title">{title}</p>
             <span className="badge">Sizin Bölgeniz</span>
           </div>
           <p>

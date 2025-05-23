@@ -1,5 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap");
 
+/* === GENERAL AND BODY START === */
+
 * {
   padding: 0;
   margin: 0;
@@ -9,7 +11,6 @@
 body {
   font-family: "Nunito", sans-serif;
   color: #343a40;
-
   position: relative;
   background: linear-gradient(135deg, #cbdef1, #cbdef1, #ffffff);
   background-repeat: no-repeat;
@@ -17,65 +18,69 @@ body {
   background-size: cover;
 }
 
-/* === NAVBAR === */
-.nav {
-  display: flex;
-  justify-content: space-between;
+.accordion-container {
+  display: grid;
+  justify-content: center;
   align-items: center;
-  background-color: #087f5b;
-  padding: 10px 40px;
-  height: 100px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-  margin-bottom: 50px;
+  grid-template-columns: repeat(auto-fit minmax(300px, 1fr));
+  padding: 2rem 0;
+  gap: 60px;
 }
 
-/* === LOGO === */
+/* === GENERAL AND BODY END === */
 
-.mainTitle {
-  color: #ffffff;
-  letter-spacing: 2px;
-  word-spacing: 4px;
-  font-size: 15px;
-  font-weight: 600;
-  text-align: center;
-}
+/* === ACCORDION START === */
 
-.selectTitle {
+.accordion {
+  width: fit-content;
   display: flex;
+  margin: auto;
   flex-direction: column;
+  gap: 24px;
+}
+
+/* == LOGO START == */
+
+.logo {
+  width: fit-content;
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 2rem 2rem;
+}
+
+.logo img {
+  width: auto;
+  height: 250px;
+  object-fit: cover;
+}
+
+/* == LOGO END == */
+
+/* == SENTENCES START == */
+
+.sentences {
+  display: flex;
+  justify-content: center;
   align-items: center;
-  margin-bottom: 27px;
-  font-size: 10px;
-  font-weight: 500;
-  color: rgba(0, 0, 0, 0.7);
 }
 
-/* === OPEN & CLOSE === */
-.status-label {
-  padding: 4px 8px;
-  border-radius: 12px;
-  font-size: 0.8rem;
-  font-weight: bold;
-  margin-left: 10px;
-  display: inline-block;
+.section-title {
+  text-shadow: 2px 2px 3px black;
+  border-top: 3px solid rgba(0, 0, 0, 0.6);
+  border-bottom: 3px solid rgba(0, 0, 0, 0.6);
+  word-spacing: 6px;
+  letter-spacing: 2px;
+  font-size: 60px;
+  text-align: center;
+  font-weight: 600;
+  color: #087f5b;
 }
 
-.status-open {
-  background-color: #d4edda;
-  color: #155724;
-}
+/* == SENTENCES END == */
 
-.status-closed {
-  background-color: #f8d7da;
-  color: #721c24;
-}
+/* == HOUR START == */
 
-.status-unknown {
-  background-color: #e2e3e5;
-  color: #383d41;
-}
-
-/* === HOURS AND DATE === */
 .mainHour {
   padding: 1.5rem;
   margin: 2rem 2rem;
@@ -109,172 +114,9 @@ body {
   color: rgba(0, 0, 0, 0.7);
 }
 
-.logo {
-  width: fit-content;
-  position: absolute;
-  top: 0;
-  left: 0;
-  margin: 2rem 2rem;
-}
+/* == HOUR END == */
 
-.logo img {
-  width: auto;
-  height: 250px;
-  object-fit: cover;
-}
-
-.sentences {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.accordion {
-  width: fit-content;
-  display: flex;
-  margin: auto;
-  flex-direction: column;
-  gap: 24px;
-}
-
-.item {
-  box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.6);
-  cursor: pointer;
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  column-gap: 24px;
-  row-gap: 32px;
-  align-items: center;
-  transition: all 0.3s ease;
-}
-
-.number {
-  font-size: 24px;
-  font-weight: 500;
-  color: #ced4da;
-}
-
-.text,
-.icon {
-  font-size: 24px;
-  font-weight: 500;
-}
-
-.accordion-wrapper {
-  display: grid;
-  justify-content: center;
-  align-items: center;
-  grid-template-columns: repeat(auto-fit minmax(300px, 1fr));
-  padding: 2rem 0;
-  gap: 60px;
-}
-
-.image img {
-  width: 40px;
-  height: 40px;
-}
-
-.content-box {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 25px;
-}
-
-.header {
-  display: flex;
-  justify-content: space-between;
-  gap: 20px;
-}
-
-.box {
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
-  background-color: whitesmoke;
-  border: 3px solid rgba(0, 0, 0, 0.6);
-  border-radius: 20px;
-  font-size: 35px;
-  padding: 1rem 2rem;
-}
-
-strong {
-  color: #000000;
-}
-
-.qrCode {
-  background-color: whitesmoke;
-  border: 3px solid rgba(0, 0, 0, 0.6);
-  padding: 1rem;
-  border-radius: 15px;
-  gap: 10px;
-}
-
-.qrText {
-  display: flex;
-  text-align: center;
-  justify-content: center;
-  align-items: center;
-  font-size: 22px;
-  font-weight: 600;
-}
-
-.font {
-  margin-top: 14px;
-  padding-right: 40px;
-}
-
-/* Açık durumda renk vurgusu */
-
-.open .number,
-.open .text {
-  color: #087f5b;
-}
-
-/* Öne çıkarılan eczane (BolgeId === 42) */
-.featured {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 40px 45px;
-  background-color: #ccf7e9;
-  border: 4px solid hsl(162, 88%, 26%);
-  border-radius: 20px;
-}
-
-.featured .number {
-  font-size: 28px;
-  color: #087f5b;
-}
-
-/* Etiket */
-.badge {
-  display: flex;
-  align-items: center;
-  background-color: #087f5b;
-  color: white;
-  padding: 0.2rem 10px;
-  border-radius: 6px;
-  vertical-align: middle;
-  border: 2px solid rgba(0, 0, 0, 0.6);
-}
-
-.section-title {
-  text-shadow: 2px 2px 3px black;
-  border-top: 3px solid rgba(0, 0, 0, 0.6);
-  border-bottom: 3px solid rgba(0, 0, 0, 0.6);
-  word-spacing: 6px;
-  letter-spacing: 2px;
-  font-size: 60px;
-  text-align: center;
-  font-weight: 600;
-  color: #087f5b;
-}
-
-.location {
-  display: none;
-}
+/* == NO-ECZANE-MESSAGE START == */
 
 .no-eczane-message {
   display: flex;
@@ -306,6 +148,12 @@ strong {
   font-size: 150px;
 }
 
+/* == NO-ECZANE-MESSAGE END == */
+
+/* === ACCORDION END === */
+
+/* === ADVERTISEMENT START === */
+
 .advertisement {
   display: flex;
   justify-content: center;
@@ -325,6 +173,110 @@ strong {
   border-radius: 20px;
   box-shadow: 8px 8px 10px rgba(0, 0, 0, 0.7);
 }
+
+/* === ADVERTISEMENT END === */
+
+/* === ITEM START === */
+
+.item {
+  box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.6);
+  cursor: pointer;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  column-gap: 24px;
+  row-gap: 32px;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+/* === ITEM FEATURED START === */
+
+.featured {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 45px;
+  background-color: #ccf7e9;
+  border: 4px solid hsl(162, 88%, 26%);
+  border-radius: 20px;
+}
+
+/* === ITEM FEATURED END === */
+
+/* === CONTENT BOX START === */
+
+.content-box {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 25px;
+}
+
+.box {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  background-color: whitesmoke;
+  border: 3px solid rgba(0, 0, 0, 0.6);
+  border-radius: 20px;
+  font-size: 35px;
+  padding: 1rem 2rem;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.title {
+  color: #087f5b;
+  font-weight: 700;
+  border-bottom: 4px solid rgba(0, 0, 0, 0.6);
+}
+
+.badge {
+  display: flex;
+  align-items: center;
+  background-color: #087f5b;
+  color: white;
+  padding: 0.2rem 10px;
+  border-radius: 6px;
+  vertical-align: middle;
+  border: 2px solid rgba(0, 0, 0, 0.6);
+}
+
+.qrCode {
+  background-color: whitesmoke;
+  border: 3px solid rgba(0, 0, 0, 0.6);
+  padding: 1rem;
+  border-radius: 15px;
+  gap: 10px;
+}
+
+.qrText {
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.location {
+  display: none;
+}
+
+strong {
+  color: #000000;
+}
+
+/* === CONTENT BOX END === */
+
+/* === ITEM END === */
+
+/* === LOADING CONTAINER START === */
 
 .loading-container {
   display: flex;
@@ -358,19 +310,4 @@ strong {
   }
 }
 
-.footer {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  background-color: #087f5b;
-  color: white;
-  text-align: center;
-  padding: 15px 0;
-  font-weight: 500;
-  box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.2);
-  z-index: 1000;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  font-size: 20px;
-  user-select: none;
-}
+/* === LOADING CONTAINER END === */
