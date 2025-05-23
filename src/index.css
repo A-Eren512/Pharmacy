@@ -23,8 +23,8 @@ body {
   justify-content: center;
   align-items: center;
   grid-template-columns: repeat(1, minmax(300px, 1fr));
-  padding: 2rem 0;
-  gap: 60px;
+  padding: 1rem 0rem;
+  gap: 50px;
 }
 
 /* === GENERAL AND BODY END === */
@@ -46,12 +46,12 @@ body {
   position: absolute;
   top: 0;
   left: 0;
-  margin: 2rem 2rem;
+  margin: 1rem 1rem;
 }
 
 .logo img {
   width: auto;
-  height: 250px;
+  height: 270px;
   object-fit: cover;
 }
 
@@ -71,7 +71,7 @@ body {
   border-bottom: 3px solid rgba(0, 0, 0, 0.6);
   word-spacing: 6px;
   letter-spacing: 2px;
-  font-size: 60px;
+  font-size: 50px;
   text-align: center;
   font-weight: 600;
   color: #087f5b;
@@ -82,8 +82,8 @@ body {
 /* == HOUR START == */
 
 .mainHour {
-  padding: 1.5rem;
-  margin: 2rem 2rem;
+  padding: 1rem;
+  margin: 1rem 1rem;
   display: flex;
   flex-direction: column;
   position: absolute;
@@ -100,17 +100,17 @@ body {
   align-items: center;
   font-family: monospace;
   color: rgba(0, 0, 0, 0.8);
-  font-size: 55px;
+  font-size: 40px;
   gap: 4px;
 }
 
 .hour::before {
   content: "🕒";
-  font-size: 57px;
+  font-size: 45px;
 }
 
 .hour .date {
-  font-size: 55px;
+  font-size: 40px;
   color: rgba(0, 0, 0, 0.7);
 }
 
@@ -124,7 +124,7 @@ body {
   justify-content: center;
   align-items: center;
   text-align: center;
-  padding: 28px 32px;
+  padding: 10px 32px;
   background-color: #f8d7da;
   color: #721c24;
   font-weight: bold;
@@ -135,17 +135,17 @@ body {
   box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.6);
   letter-spacing: 2px;
   word-spacing: 2px;
-  min-height: 658.38px;
+  min-height: 448.38px;
 }
 
 .no-eczane-message::before {
   content: "❌";
-  font-size: 150px;
+  font-size: 120px;
 }
 
 .no-eczane-message::after {
   content: "😔";
-  font-size: 150px;
+  font-size: 120px;
 }
 
 /* == NO-ECZANE-MESSAGE END == */
@@ -167,7 +167,7 @@ body {
 }
 
 .promo img {
-  width: 800px;
+  width: 595px;
   height: auto;
   object-fit: cover;
   border-radius: 20px;
@@ -194,14 +194,18 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 40px 45px;
+  padding: 2rem 3.5rem;
   background-color: #ccf7e9;
   border: 4px solid hsl(162, 88%, 26%);
   border-radius: 20px;
 }
 
 .text-card {
-  max-width: 40ch;
+  max-width: 23ch;
+}
+
+.text-card2 {
+  max-width: 30ch;
 }
 
 /* === ITEM FEATURED END === */
@@ -210,10 +214,10 @@ body {
 
 .content-box {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
-  gap: 25px;
+  gap: 100px;
 }
 
 .box {
@@ -224,7 +228,7 @@ body {
   border: 3px solid rgba(0, 0, 0, 0.6);
   border-radius: 20px;
   font-size: 35px;
-  padding: 1rem 2rem;
+  padding: 1.5rem 2rem;
 }
 
 .header {

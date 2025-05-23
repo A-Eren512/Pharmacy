@@ -96,7 +96,7 @@ function AccordionItemKendiBolge({
             <p className="title text-card">{title}</p>
             <span className="badge">Sizin Bölgeniz</span>
           </div>
-          <p className="text-card">
+          <p className="text-card2">
             <strong>Adres:</strong>
             {adres}
             <br />
@@ -110,7 +110,7 @@ function AccordionItemKendiBolge({
           </p>
         </div>
         <div className="qrCode">
-          <QRCodeCanvas value={googleMapsUrl} size={128} />
+          <QRCodeCanvas value={googleMapsUrl} size={272} />
           <div className="qrText">
             <p>
               Konum için <br /> QR Kod
