@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { QRCodeCanvas } from "qrcode.react";
 
 export default function NobetciEczaneler() {
   const [eczaneler, setEczaneler] = useState([]);
   const [loading, setLoading] = useState(true);
   const [hata, setHata] = useState(null);
-
+  const [currentEczane, setCurrentEczane] = useState(0);
   useEffect(() => {
     fetch("https://openapi.izmir.bel.tr/api/ibb/nobetcieczaneler")
       .then((response) => {
@@ -22,6 +22,28 @@ export default function NobetciEczaneler() {
       });
   }, []);
 
+  const kendiBolgeEczaneleri = useMemo(() => {
+    const bolgeId = 42;
+
+    return eczaneler.filter((e) => e.BolgeId === bolgeId);
+  }, [eczaneler]);
+
+  useEffect(() => {
+    setCurrentEczane(0);
+  }, [kendiBolgeEczaneleri.length]);
+
+  useEffect(() => {
+    if (kendiBolgeEczaneleri.length < 2) return;
+
+    const interval = setInterval(() => {
+      setCurrentEczane(
+        (prevIndex) => (prevIndex + 1) % kendiBolgeEczaneleri.length
+      );
+    }, 15000);
+
+    return () => clearInterval(interval);
+  }, [kendiBolgeEczaneleri.length]);
+
   if (loading) {
     return (
       <div className="loading-container">
@@ -33,10 +55,9 @@ export default function NobetciEczaneler() {
 
   if (hata) return <p>Hata: {hata}</p>;
 
-  const kendiBolgeEczaneleri = eczaneler.filter((e) => e.BolgeId === 42);
   const kendiSecilenEczane =
     kendiBolgeEczaneleri.length > 0
-      ? kendiBolgeEczaneleri.sort((a, b) => a.Adi.localeCompare(b.Adi))[0]
+      ? kendiBolgeEczaneleri[currentEczane]
       : null;
 
   return (
@@ -64,18 +85,65 @@ export default function NobetciEczaneler() {
           />
         ) : (
           <div className="no-eczane-message">
-            BÖLGENİZDE NÖBETÇİ ECZANE BULUNAMADI.
+            BÖLGENİZDE NÖBETÇİ ECZANE YOKTUR.
           </div>
         )}
       </div>
       <div className="advertisement">
         <div className="promo">
-          <img src="./images/reklam-1.jpg" alt="promo-1" />
+          <img src={dynamicPromo1Image} alt="promo-1" />
           <img src="./images/reklam-2.jpg" alt="promo-2" />
-          <img src="./images/reklam-3.jpg" alt="promo-3" />
+          <DynamicImageRotator />
         </div>
       </div>
     </div>
+  );
+}
+
+function getFormattedDayMonth(date = new Date()) {
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  return `${day}-${month}`;
+}
+
+const specialDayImages = {
+  "01-01": "./images/reklam-2.jpg",
+};
+
+const todayKey = getFormattedDayMonth();
+const dynamicPromo1Image =
+  specialDayImages[todayKey] || "./images/reklam-1.jpg";
+
+function DynamicImageRotator() {
+  const images = useMemo(
+    () => [
+      "./images/reklam-1.jpg",
+      "./images/reklam-2.jpg",
+      "./images/reklam-3.jpg",
+    ],
+    []
+  );
+
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setLoaded(false);
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
+    }, 15000);
+
+    return () => clearInterval(interval);
+  }, [images.length]);
+
+  return (
+    <img
+      key={images[currentIndex]}
+      src={images[currentIndex]}
+      alt="promo-3"
+      className={`fade-image ${loaded ? "loaded" : ""}`}
+      onLoad={() => setLoaded(true)}
+    />
   );
 }
 
@@ -88,9 +156,26 @@ function AccordionItemKendiBolge({
   bolge,
 }) {
   const googleMapsUrl = `https://www.google.com/maps?q=${latitude},${longitude}`;
+
+  const colors = useMemo(() => ["#087f5b", "#169b73"], []);
+
+  const [currentColorIndex, setCurrentColorIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentColorIndex((prevIndex) => (prevIndex + 1) % colors.length);
+    }, 1500);
+
+    return () => clearInterval(interval);
+  }, [colors.length]);
+
+  const badgeStyle = {
+    backgroundColor: colors[currentColorIndex],
+    transition: "background-color 1s ease-in-out",
+  };
+
   function formatPhoneNumber(phone) {
     const digits = phone.replace(/\D/g, "");
-
     return digits.replace(/(\d{4})(\d{3})(\d{2})(\d{2})/, "$1 $2 $3 $4");
   }
 
@@ -100,7 +185,9 @@ function AccordionItemKendiBolge({
         <div className="box">
           <div className="header">
             <p className="title text-card">{title}</p>
-            <span className="badge">Sizin Bölgeniz</span>
+            <span className="badge" style={badgeStyle}>
+              Sizin Bölgeniz
+            </span>
           </div>
           <p className="text-card2">
             <strong>Adres:</strong> {adres}
@@ -108,9 +195,7 @@ function AccordionItemKendiBolge({
             <strong>Telefon:</strong> {formatPhoneNumber(telefon)}
             <br />
             <strong>İlçe:</strong> {bolge}
-            <br />
             <strong className="location">Enlem: {latitude}</strong>
-            <br />
             <strong className="location">Boylam: {longitude}</strong>
           </p>
         </div>
