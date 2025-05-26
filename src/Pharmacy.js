@@ -123,34 +123,29 @@ export default function NobetciEczaneler() {
       : null;
 
   return (
-    <div className="accordion-container">
-      <div className="accordion">
-        <div className="sentences">
-          <h2 className="section-title">YENİ SAĞLIK ECZANESİ</h2>
-        </div>
-        {kendiSecilenEczane ? (
-          <AccordionItemKendiBolge
-            key={`kendi-${kendiSecilenEczane.Adi}`}
-            title={kendiSecilenEczane.Adi}
-            latitude={kendiSecilenEczane.LokasyonX}
-            longitude={kendiSecilenEczane.LokasyonY}
-            adres={kendiSecilenEczane.Adres}
-            telefon={kendiSecilenEczane.Telefon}
-            bolgeId={kendiSecilenEczane.BolgeId}
-            bolge={kendiSecilenEczane.Bolge}
-          />
-        ) : (
-          <div className="no-eczane-message">
-            <div className="logo">
-              <img src="./images/pharmacy.png" alt="pharmacy" />
-            </div>
-            <div className="mainHour">
-              <Hour />
-            </div>
-            BÖLGENİZDE NÖBETÇİ ECZANE YOKTUR.
+    <div className="accordion">
+      {kendiSecilenEczane ? (
+        <AccordionItemKendiBolge
+          key={`kendi-${kendiSecilenEczane.Adi}`}
+          title={kendiSecilenEczane.Adi}
+          latitude={kendiSecilenEczane.LokasyonX}
+          longitude={kendiSecilenEczane.LokasyonY}
+          adres={kendiSecilenEczane.Adres}
+          telefon={kendiSecilenEczane.Telefon}
+          bolgeId={kendiSecilenEczane.BolgeId}
+          bolge={kendiSecilenEczane.Bolge}
+        />
+      ) : (
+        <div className="no-eczane-message">
+          <div className="logo">
+            <img src="./images/pharmacy.png" alt="pharmacy" />
           </div>
-        )}
-      </div>
+          <div className="mainHour">
+            <Hour />
+          </div>
+          BÖLGENİZDE NÖBETÇİ ECZANE YOKTUR.
+        </div>
+      )}
     </div>
   );
 }
@@ -161,26 +156,8 @@ function AccordionItemKendiBolge({
   longitude,
   adres,
   telefon,
-  bolge,
 }) {
   const googleMapsUrl = `https://www.google.com/maps?q=${latitude},${longitude}`;
-
-  const colors = useMemo(() => ["#087f5b", "#169b73"], []);
-
-  const [currentColorIndex, setCurrentColorIndex] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentColorIndex((prevIndex) => (prevIndex + 1) % colors.length);
-    }, 1500);
-
-    return () => clearInterval(interval);
-  }, [colors.length]);
-
-  const badgeStyle = {
-    backgroundColor: colors[currentColorIndex],
-    transition: "background-color 1s ease-in-out",
-  };
 
   function formatPhoneNumber(phone = "") {
     const digits = phone.replace(/\D/g, "");
@@ -200,24 +177,22 @@ function AccordionItemKendiBolge({
       </div>
       <div className="content-box">
         <div className="box">
+          <span className="badge">
+            <b> NÖBETÇİ ECZANE </b>
+          </span>
           <div className="header">
             <p className="title text-card">{title}</p>
-            <span className="badge" style={badgeStyle}>
-              Sizin Bölgeniz
-            </span>
           </div>
           <p className="text-card2">
             <strong>Adres:</strong> {adres}
             <br />
             <strong>Telefon:</strong> {formatPhoneNumber(telefon)}
-            <br />
-            <strong>İlçe:</strong> {bolge}
             <strong className="location">Enlem: {latitude}</strong>
             <strong className="location">Boylam: {longitude}</strong>
           </p>
         </div>
         <div className="qrCode">
-          <QRCodeCanvas value={googleMapsUrl} size={240} />
+          <QRCodeCanvas value={googleMapsUrl} size={300} />
           <div className="qrText">
             <p>
               Konum için <br /> QR Kod
