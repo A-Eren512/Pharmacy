@@ -1,11 +1,53 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { QRCodeCanvas } from "qrcode.react";
 
+function ResimSablonu() {
+  const resimler = [
+    "/images/reklam-1.jpg",
+    "/images/reklam-2.jpg",
+    "/images/reklam-3.jpg",
+    "/images/reklam-4.jpg",
+    "/images/reklam-5.jpg",
+    "/images/reklam-6.jpg",
+    "/images/reklam-7.jpg",
+    "/images/reklam-8.jpg",
+    "/images/reklam-9.jpg",
+  ];
+
+  const [index, setIndex] = useState(0);
+  const [fade, setFade] = useState(true);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setFade(false);
+
+      setTimeout(() => {
+        setIndex((prev) => (prev + 1) % resimler.length);
+        setFade(true);
+      }, 300);
+    }, 10000);
+
+    return () => clearInterval(interval);
+  }, [resimler.length]);
+
+  return (
+    <div className="fullscreen-slider">
+      <img
+        src={resimler[index]}
+        alt={`slider-${index}`}
+        className={`fullscreen-image ${fade ? "fade-in" : "fade-out"}`}
+      />
+    </div>
+  );
+}
+
 export default function NobetciEczaneler() {
   const [eczaneler, setEczaneler] = useState([]);
   const [loading, setLoading] = useState(true);
   const [hata, setHata] = useState(null);
   const [currentEczane, setCurrentEczane] = useState(0);
+  const [currentTime, setCurrentTime] = useState(new Date());
+
   useEffect(() => {
     fetch("https://openapi.izmir.bel.tr/api/ibb/nobetcieczaneler")
       .then((response) => {
@@ -22,9 +64,25 @@ export default function NobetciEczaneler() {
       });
   }, []);
 
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const now = currentTime;
+
+  const startTime = new Date(now);
+  startTime.setHours(9, 0, 0, 0); // 09:00:00
+
+  const endTime = new Date(now);
+  endTime.setHours(19, 0, 0, 0); // 19:00:00
+
+  const isResimZamani = now >= startTime && now < endTime;
+
   const kendiBolgeEczaneleri = useMemo(() => {
     const bolgeId = 42;
-
     return eczaneler.filter((e) => e.BolgeId === bolgeId);
   }, [eczaneler]);
 
@@ -43,6 +101,10 @@ export default function NobetciEczaneler() {
 
     return () => clearInterval(interval);
   }, [kendiBolgeEczaneleri.length]);
+
+  if (isResimZamani) {
+    return <ResimSablonu />;
+  }
 
   if (loading) {
     return (
@@ -63,14 +125,8 @@ export default function NobetciEczaneler() {
   return (
     <div className="accordion-container">
       <div className="accordion">
-        <div className="logo">
-          <img src="./images/pharmacy.png" alt="pharmacy" />
-        </div>
         <div className="sentences">
-          <h2 className="section-title">BÖLGENİZDEKİ NÖBETÇİ ECZANE</h2>
-        </div>
-        <div className="mainHour">
-          <Hour />
+          <h2 className="section-title">YENİ SAĞLIK ECZANESİ</h2>
         </div>
         {kendiSecilenEczane ? (
           <AccordionItemKendiBolge
@@ -85,65 +141,17 @@ export default function NobetciEczaneler() {
           />
         ) : (
           <div className="no-eczane-message">
+            <div className="logo">
+              <img src="./images/pharmacy.png" alt="pharmacy" />
+            </div>
+            <div className="mainHour">
+              <Hour />
+            </div>
             BÖLGENİZDE NÖBETÇİ ECZANE YOKTUR.
           </div>
         )}
       </div>
-      <div className="advertisement">
-        <div className="promo">
-          <img src={dynamicPromo1Image} alt="promo-1" />
-          <img src="./images/reklam-2.jpg" alt="promo-2" />
-          <DynamicImageRotator />
-        </div>
-      </div>
     </div>
-  );
-}
-
-function getFormattedDayMonth(date = new Date()) {
-  const day = String(date.getDate()).padStart(2, "0");
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  return `${day}-${month}`;
-}
-
-const specialDayImages = {
-  "01-01": "./images/reklam-2.jpg",
-};
-
-const todayKey = getFormattedDayMonth();
-const dynamicPromo1Image =
-  specialDayImages[todayKey] || "./images/reklam-1.jpg";
-
-function DynamicImageRotator() {
-  const images = useMemo(
-    () => [
-      "./images/reklam-1.jpg",
-      "./images/reklam-2.jpg",
-      "./images/reklam-3.jpg",
-    ],
-    []
-  );
-
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [loaded, setLoaded] = useState(false);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setLoaded(false);
-      setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
-    }, 15000);
-
-    return () => clearInterval(interval);
-  }, [images.length]);
-
-  return (
-    <img
-      key={images[currentIndex]}
-      src={images[currentIndex]}
-      alt="promo-3"
-      className={`fade-image ${loaded ? "loaded" : ""}`}
-      onLoad={() => setLoaded(true)}
-    />
   );
 }
 
@@ -174,13 +182,22 @@ function AccordionItemKendiBolge({
     transition: "background-color 1s ease-in-out",
   };
 
-  function formatPhoneNumber(phone) {
+  function formatPhoneNumber(phone = "") {
     const digits = phone.replace(/\D/g, "");
-    return digits.replace(/(\d{4})(\d{3})(\d{2})(\d{2})/, "$1 $2 $3 $4");
+    if (digits.length === 11) {
+      return digits.replace(/(\d{4})(\d{3})(\d{2})(\d{2})/, "$1 $2 $3 $4");
+    }
+    return phone;
   }
 
   return (
     <div className="item featured">
+      <div className="logo">
+        <img src="./images/pharmacy.png" alt="pharmacy" />
+      </div>
+      <div className="mainHour">
+        <Hour />
+      </div>
       <div className="content-box">
         <div className="box">
           <div className="header">
@@ -200,7 +217,7 @@ function AccordionItemKendiBolge({
           </p>
         </div>
         <div className="qrCode">
-          <QRCodeCanvas value={googleMapsUrl} size={272} />
+          <QRCodeCanvas value={googleMapsUrl} size={240} />
           <div className="qrText">
             <p>
               Konum için <br /> QR Kod

@@ -11,7 +11,6 @@
 body {
   font-family: "Nunito", sans-serif;
   color: #343a40;
-  position: relative;
   background: linear-gradient(135deg, #cbdef1, #cbdef1, #ffffff);
   background-repeat: no-repeat;
   background-attachment: fixed;
@@ -51,7 +50,7 @@ body {
 
 .logo img {
   width: auto;
-  height: 260px;
+  height: 160px;
   object-fit: cover;
 }
 
@@ -70,7 +69,7 @@ body {
   border-top: 3px solid rgba(0, 0, 0, 0.6);
   border-bottom: 3px solid rgba(0, 0, 0, 0.6);
   word-spacing: 6px;
-  letter-spacing: 2px;
+  letter-spacing: 4px;
   font-size: 50px;
   text-align: center;
   font-weight: 600;
@@ -125,62 +124,47 @@ body {
   justify-content: center;
   align-items: center;
   text-align: center;
+  width: 1900px;
+  height: 940px;
   padding: 10px 32px;
   background-color: #f8d7da;
   color: #721c24;
   font-weight: bold;
-  font-size: 40px;
+  font-size: 80px;
   line-height: 1.5;
   border: 4px solid #f5c6cb;
   border-radius: 20px;
-  box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.6);
+  box-shadow: 4px 8px 20px 10px rgba(0, 0, 0, 0.6);
+  border: 3px solid rgba(0, 0, 0, 0.7);
   letter-spacing: 2px;
   word-spacing: 2px;
   min-height: 448.38px;
+  position: relative;
+}
+
+.no-eczane-message img {
+  width: auto;
+  height: 195px;
 }
 
 .no-eczane-message::before {
   content: "❌";
-  font-size: 120px;
+  font-size: 180px;
 }
 
 .no-eczane-message::after {
   content: "😔";
-  font-size: 120px;
+  font-size: 180px;
 }
 
 /* == NO-ECZANE-MESSAGE END == */
 
 /* === ACCORDION END === */
 
-/* === ADVERTISEMENT START === */
-
-.advertisement {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.promo {
-  display: flex;
-  width: fit-content;
-  gap: 50px;
-}
-
-.promo img {
-  width: 595px;
-  height: auto;
-  object-fit: cover;
-  border-radius: 20px;
-  box-shadow: 8px 8px 10px rgba(0, 0, 0, 0.7);
-}
-
-/* === ADVERTISEMENT END === */
-
 /* === ITEM START === */
 
 .item {
-  box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.6);
+  box-shadow: 4px 8px 20px 10px rgba(0, 0, 0, 0.6);
   display: grid;
   grid-template-columns: auto 1fr auto;
   column-gap: 24px;
@@ -192,11 +176,13 @@ body {
 /* === ITEM FEATURED START === */
 
 .featured {
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 2rem 3.5rem;
-  background-color: #ccf7e9;
+  width: 1900px;
+  height: 940px;
+  background: linear-gradient(135deg, #8be2eb 0%, #aef4dc 100%);
   border: 4px solid hsl(162, 88%, 26%);
   border-radius: 20px;
 }
@@ -218,7 +204,7 @@ body {
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  gap: 100px;
+  gap: 50px;
 }
 
 .box {
@@ -226,10 +212,11 @@ body {
   flex-direction: column;
   gap: 30px;
   background-color: whitesmoke;
+  box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.6);
   border: 3px solid rgba(0, 0, 0, 0.6);
   border-radius: 20px;
-  font-size: 35px;
-  padding: 1.5rem 2rem;
+  font-size: 50px;
+  padding: 5rem 3rem;
 }
 
 .header {
@@ -257,6 +244,7 @@ body {
 .qrCode {
   background-color: whitesmoke;
   border: 3px solid rgba(0, 0, 0, 0.6);
+  box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.6);
   padding: 1rem;
   border-radius: 15px;
   gap: 10px;
@@ -267,7 +255,7 @@ body {
   text-align: center;
   justify-content: center;
   align-items: center;
-  font-size: 22px;
+  font-size: 35px;
   font-weight: 600;
 }
 
@@ -321,13 +309,104 @@ strong {
 
 /* FADE EFFECT START */
 
-.fade-image {
-  opacity: 0;
-  transition: opacity 0.8s ease-in-out;
+.fullscreen-slider {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: whitesmoke;
+  overflow: hidden;
+  z-index: 1000;
 }
 
-.fade-image.loaded {
+.fullscreen-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  transition: opacity 0.5s ease-in-out;
   opacity: 1;
 }
 
+.fade-in {
+  opacity: 1;
+}
+
+.fade-out {
+  opacity: 0;
+}
+
 /* FADE EFFECT END */
+
+/* RESPONSIVE START */
+
+@media (max-width: 1366px) and (max-height: 768px) {
+  .featured,
+  .no-eczane-message {
+    width: 1350px;
+    height: 720px;
+    padding: 20px;
+    font-size: 40px;
+  }
+
+  .no-eczane-message {
+    font-size: 40px;
+  }
+
+  .logo img {
+    height: 100px;
+  }
+
+  .mainHour {
+    font-size: 18px;
+    margin: 0.5rem;
+    padding: 0.2rem;
+  }
+
+  .hour {
+    font-size: 24px;
+  }
+
+  .hour .date {
+    font-size: 24px;
+  }
+
+  .box {
+    font-size: 40px;
+    padding: 2rem 1.5rem;
+  }
+
+  .qrCode {
+    padding: 0.5rem;
+  }
+
+  .qrText {
+    font-size: 30px;
+  }
+
+  .section-title {
+    font-size: 36px;
+  }
+  .content-box {
+    gap: 20px;
+  }
+
+  .text-card,
+  .text-card2 {
+    max-width: 20ch;
+    font-size: 40px;
+  }
+
+  .spinner {
+    width: 40px;
+    height: 40px;
+    border-width: 4px;
+  }
+
+  .loading-text {
+    font-size: 18px;
+  }
+}
+
+/* RESPONSIVE END */
