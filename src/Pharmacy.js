@@ -3,6 +3,7 @@ import { QRCodeCanvas } from "qrcode.react";
 
 function ResimSablonu() {
   const resimler = [
+    "/images/welcome.png",
     "/images/reklam-1.jpg",
     "/images/reklam-2.jpg",
     "/images/reklam-3.jpg",
@@ -51,7 +52,7 @@ export default function NobetciEczaneler() {
   useEffect(() => {
     fetch("https://openapi.izmir.bel.tr/api/ibb/nobetcieczaneler")
       .then((response) => {
-        if (!response.ok) throw new Error("Ağ yanıtı başarısız oldu");
+        if (!response.ok) throw new Error("Ağ(API) yanıtı başarısız oldu.");
         return response.json();
       })
       .then((data) => {
@@ -115,7 +116,13 @@ export default function NobetciEczaneler() {
     );
   }
 
-  if (hata) return <p>Hata: {hata}</p>;
+  if (hata) {
+    return (
+      <div className="error-message">
+        <p>⚠️ Hata: {hata}</p>
+      </div>
+    );
+  }
 
   const kendiSecilenEczane =
     kendiBolgeEczaneleri.length > 0
@@ -178,7 +185,7 @@ function AccordionItemKendiBolge({
       <div className="content-box">
         <div className="box">
           <span className="badge">
-            <b> NÖBETÇİ ECZANE </b>
+            <b>NÖBETÇİ ECZANE</b>
           </span>
           <div className="header">
             <p className="title text-card">{title}</p>
