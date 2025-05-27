@@ -188,10 +188,10 @@ function AccordionItemKendiBolge({
             <b>NÖBETÇİ ECZANE</b>
           </span>
           <div className="header">
-            <p className="title text-card">{title}</p>
+            <p className="title text-card">{title} SSSSSSSSSSSSSSS </p>
           </div>
           <p className="text-card2">
-            <strong>Adres:</strong> {adres}
+            <strong>Adres:</strong> {adres} SSSSSSSSSSSSSSSS SSSSSSSSSS
             <br />
             <strong>Telefon:</strong> {formatPhoneNumber(telefon)}
             <strong className="location">Enlem: {latitude}</strong>
