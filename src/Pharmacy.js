@@ -75,7 +75,7 @@ export default function NobetciEczaneler() {
   const now = currentTime;
 
   const startTime = new Date(now);
-  startTime.setHours(15, 0, 0, 0); // 09:00:00
+  startTime.setHours(9, 0, 0, 0); // 09:00:00
 
   const endTime = new Date(now);
   endTime.setHours(19, 0, 0, 0); // 19:00:00
@@ -188,10 +188,10 @@ function AccordionItemKendiBolge({
             <b>NÖBETÇİ ECZANE</b>
           </span>
           <div className="header">
-            <p className="title text-card">{title} SSSSSSSSSSSSSSS </p>
+            <p className="title text-card">{title}</p>
           </div>
           <p className="text-card2">
-            <strong>Adres:</strong> {adres} SSSSSSSSSSSSSSSS SSSSSSSSSS
+            <strong>Adres:</strong> {adres}
             <br />
             <strong>Telefon:</strong> {formatPhoneNumber(telefon)}
             <strong className="location">Enlem: {latitude}</strong>
