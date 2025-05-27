@@ -3,7 +3,7 @@ import { QRCodeCanvas } from "qrcode.react";
 
 function ResimSablonu() {
   const resimler = [
-    "/images/welcome.png",
+    "/images/welcome.jpg",
     "/images/reklam-1.jpg",
     "/images/reklam-2.jpg",
     "/images/reklam-3.jpg",
