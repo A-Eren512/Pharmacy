@@ -13,30 +13,46 @@ function ResimSablonu() {
     "/images/reklam-7.jpg",
     "/images/reklam-8.jpg",
     "/images/reklam-9.jpg",
+    "/images/reklam-10.jpg",
+    "/images/reklam-11.jpg",
+    "/images/reklam-12.jpg",
+    "/images/reklam-13.jpg",
+    "/images/reklam-14.jpg",
+    "/images/reklam-15.jpg",
+    "/images/reklam-16.jpg",
   ];
 
   const [index, setIndex] = useState(0);
   const [fade, setFade] = useState(true);
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   useEffect(() => {
-    const interval = setInterval(() => {
+    const currentDuration = index === 0 ? 60000 : 15000;
+
+    const timeout = setTimeout(() => {
       setFade(false);
 
       setTimeout(() => {
         setIndex((prev) => (prev + 1) % resimler.length);
-        setFade(true);
+        setImageLoaded(false);
       }, 300);
-    }, 10000);
+    }, currentDuration);
 
-    return () => clearInterval(interval);
-  }, [resimler.length]);
+    return () => clearTimeout(timeout);
+  }, [index, resimler.length]);
 
   return (
     <div className="fullscreen-slider">
       <img
         src={resimler[index]}
         alt={`slider-${index}`}
-        className={`fullscreen-image ${fade ? "fade-in" : "fade-out"}`}
+        onLoad={() => {
+          setImageLoaded(true);
+          setFade(true);
+        }}
+        className={`fullscreen-image ${
+          fade && imageLoaded ? "fade-in" : "fade-out"
+        }`}
       />
     </div>
   );
