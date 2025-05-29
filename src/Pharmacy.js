@@ -1,37 +1,44 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { QRCodeCanvas } from "qrcode.react";
 
-function ResimSablonu() {
-  const resimler = [
-    "/images/welcome.jpg",
-    "/images/reklam-1.jpg",
-    "/images/reklam-2.jpg",
-    "/images/reklam-3.jpg",
-    "/images/reklam-4.jpg",
-    "/images/reklam-5.jpg",
-    "/images/reklam-6.jpg",
-    "/images/reklam-7.jpg",
-    "/images/reklam-8.jpg",
-    "/images/reklam-9.jpg",
-    "/images/reklam-10.jpg",
-    "/images/reklam-11.jpg",
-    "/images/reklam-12.jpg",
-    "/images/reklam-13.jpg",
-    "/images/reklam-14.jpg",
-    "/images/reklam-15.jpg",
-    "/images/reklam-16.jpg",
-  ];
+const resimler = [
+  "/images/welcome.jpg",
+  "/images/reklam-1.jpg",
+  "/images/reklam-2.jpg",
+  "/images/reklam-3.jpg",
+  "/images/reklam-4.jpg",
+  "/images/reklam-5.jpg",
+  "/images/reklam-6.jpg",
+  "/images/reklam-7.jpg",
+  "/images/reklam-8.jpg",
+  "/images/reklam-9.jpg",
+  "/images/reklam-10.jpg",
+  "/images/reklam-11.jpg",
+  "/images/reklam-12.jpg",
+  "/images/reklam-13.jpg",
+  "/images/reklam-14.jpg",
+  "/images/reklam-15.jpg",
+  "/images/reklam-16.jpg",
+];
 
+function ResimSablonu() {
   const [index, setIndex] = useState(0);
   const [fade, setFade] = useState(true);
   const [imageLoaded, setImageLoaded] = useState(false);
+
+  useEffect(() => {
+    for (let i = 1; i <= 2; i++) {
+      const preloadIndex = (index + i) % resimler.length;
+      const img = new Image();
+      img.src = resimler[preloadIndex];
+    }
+  }, [index]);
 
   useEffect(() => {
     const currentDuration = index === 0 ? 60000 : 15000;
 
     const timeout = setTimeout(() => {
       setFade(false);
-
       setTimeout(() => {
         setIndex((prev) => (prev + 1) % resimler.length);
         setImageLoaded(false);
@@ -39,7 +46,7 @@ function ResimSablonu() {
     }, currentDuration);
 
     return () => clearTimeout(timeout);
-  }, [index, resimler.length]);
+  }, [index]);
 
   return (
     <div className="fullscreen-slider">
@@ -50,6 +57,7 @@ function ResimSablonu() {
           setImageLoaded(true);
           setFade(true);
         }}
+        loading="eager"
         className={`fullscreen-image ${
           fade && imageLoaded ? "fade-in" : "fade-out"
         }`}
