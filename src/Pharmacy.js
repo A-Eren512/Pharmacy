@@ -27,7 +27,6 @@ function ResimSablonu() {
   const [imageLoaded, setImageLoaded] = useState(false);
 
   useEffect(() => {
-    // Ön yükleme (preload) yapılacak sonraki 2 resim
     for (let i = 1; i <= 2; i++) {
       const preloadIndex = (index + i) % resimler.length;
       const img = new Image();
@@ -70,13 +69,10 @@ function ResimSablonu() {
 export default function NobetciEczaneler() {
   const containerRef = useRef(null);
 
-  // Tam ekran durumu
   const [isFullScreen, setIsFullScreen] = useState(false);
 
-  // Buton görünürlüğü durumu (tam ekranda gizlemek/göstermek için)
   const [showFullscreenBtn, setShowFullscreenBtn] = useState(true);
 
-  // Tam ekran toggle fonksiyonu
   const toggleFullScreen = () => {
     if (!isFullScreen) {
       const el = containerRef.current || document.documentElement;
@@ -98,7 +94,6 @@ export default function NobetciEczaneler() {
     }
   };
 
-  // fullscreen durumunu dinle (kullanıcı ESC ile çıkarsa da güncelle)
   useEffect(() => {
     const handleFullScreenChange = () => {
       const fsElement =
@@ -106,7 +101,7 @@ export default function NobetciEczaneler() {
         document.webkitFullscreenElement ||
         document.msFullscreenElement;
       setIsFullScreen(!!fsElement);
-      setShowFullscreenBtn(true); // Durum değişince butonu göster
+      setShowFullscreenBtn(true);
     };
 
     document.addEventListener("fullscreenchange", handleFullScreenChange);
@@ -126,10 +121,9 @@ export default function NobetciEczaneler() {
     };
   }, []);
 
-  // Tam ekran modundayken kullanıcı hareketlerini dinle, butonu gizle/göster
   useEffect(() => {
     if (!isFullScreen) {
-      setShowFullscreenBtn(true); // Tam ekran değilse buton hep görünür
+      setShowFullscreenBtn(true);
       return;
     }
 
@@ -141,10 +135,8 @@ export default function NobetciEczaneler() {
       hideTimeout = setTimeout(() => setShowFullscreenBtn(false), 3000);
     };
 
-    // Başlangıçta 3 sn sonra gizle
     hideTimeout = setTimeout(() => setShowFullscreenBtn(false), 3000);
 
-    // Fare hareketi ve dokunma hareketlerini dinle
     window.addEventListener("mousemove", showButton);
     window.addEventListener("touchstart", showButton);
 
