@@ -187,7 +187,7 @@ export default function NobetciEczaneler() {
   const now = currentTime;
 
   const startTime = new Date(now);
-  startTime.setHours(9, 0, 0, 0); // 09:00:00
+  startTime.setHours(19, 0, 0, 0); // 09:00:00
 
   const endTime = new Date(now);
   endTime.setHours(19, 0, 0, 0); // 19:00:00
