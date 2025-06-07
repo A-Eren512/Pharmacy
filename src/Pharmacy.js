@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState, useRef } from "react";
 import { QRCodeCanvas } from "qrcode.react";
 
 const resimler = [
@@ -27,6 +27,7 @@ function ResimSablonu() {
   const [imageLoaded, setImageLoaded] = useState(false);
 
   useEffect(() => {
+    // Ön yükleme (preload) yapılacak sonraki 2 resim
     for (let i = 1; i <= 2; i++) {
       const preloadIndex = (index + i) % resimler.length;
       const img = new Image();
@@ -67,6 +68,93 @@ function ResimSablonu() {
 }
 
 export default function NobetciEczaneler() {
+  const containerRef = useRef(null);
+
+  // Tam ekran durumu
+  const [isFullScreen, setIsFullScreen] = useState(false);
+
+  // Buton görünürlüğü durumu (tam ekranda gizlemek/göstermek için)
+  const [showFullscreenBtn, setShowFullscreenBtn] = useState(true);
+
+  // Tam ekran toggle fonksiyonu
+  const toggleFullScreen = () => {
+    if (!isFullScreen) {
+      const el = containerRef.current || document.documentElement;
+      if (el.requestFullscreen) {
+        el.requestFullscreen();
+      } else if (el.webkitRequestFullscreen) {
+        el.webkitRequestFullscreen();
+      } else if (el.msRequestFullscreen) {
+        el.msRequestFullscreen();
+      }
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      } else if (document.webkitExitFullscreen) {
+        document.webkitExitFullscreen();
+      } else if (document.msExitFullscreen) {
+        document.msExitFullscreen();
+      }
+    }
+  };
+
+  // fullscreen durumunu dinle (kullanıcı ESC ile çıkarsa da güncelle)
+  useEffect(() => {
+    const handleFullScreenChange = () => {
+      const fsElement =
+        document.fullscreenElement ||
+        document.webkitFullscreenElement ||
+        document.msFullscreenElement;
+      setIsFullScreen(!!fsElement);
+      setShowFullscreenBtn(true); // Durum değişince butonu göster
+    };
+
+    document.addEventListener("fullscreenchange", handleFullScreenChange);
+    document.addEventListener("webkitfullscreenchange", handleFullScreenChange);
+    document.addEventListener("msfullscreenchange", handleFullScreenChange);
+
+    return () => {
+      document.removeEventListener("fullscreenchange", handleFullScreenChange);
+      document.removeEventListener(
+        "webkitfullscreenchange",
+        handleFullScreenChange
+      );
+      document.removeEventListener(
+        "msfullscreenchange",
+        handleFullScreenChange
+      );
+    };
+  }, []);
+
+  // Tam ekran modundayken kullanıcı hareketlerini dinle, butonu gizle/göster
+  useEffect(() => {
+    if (!isFullScreen) {
+      setShowFullscreenBtn(true); // Tam ekran değilse buton hep görünür
+      return;
+    }
+
+    let hideTimeout;
+
+    const showButton = () => {
+      setShowFullscreenBtn(true);
+      clearTimeout(hideTimeout);
+      hideTimeout = setTimeout(() => setShowFullscreenBtn(false), 3000);
+    };
+
+    // Başlangıçta 3 sn sonra gizle
+    hideTimeout = setTimeout(() => setShowFullscreenBtn(false), 3000);
+
+    // Fare hareketi ve dokunma hareketlerini dinle
+    window.addEventListener("mousemove", showButton);
+    window.addEventListener("touchstart", showButton);
+
+    return () => {
+      window.removeEventListener("mousemove", showButton);
+      window.removeEventListener("touchstart", showButton);
+      clearTimeout(hideTimeout);
+    };
+  }, [isFullScreen]);
+
   const [eczaneler, setEczaneler] = useState([]);
   const [loading, setLoading] = useState(true);
   const [hata, setHata] = useState(null);
@@ -127,44 +215,46 @@ export default function NobetciEczaneler() {
     return () => clearInterval(interval);
   }, [kendiBolgeEczaneleri.length]);
 
-  if (isResimZamani) {
-    return <ResimSablonu />;
-  }
-
-  if (loading) {
-    return (
-      <div className="loading-container">
-        <div className="spinner"></div>
-        <p className="loading-text">Yükleniyor...</p>
-      </div>
-    );
-  }
-
-  if (hata) {
-    return (
-      <div className="error-message">
-        <p>⚠️ Hata: {hata}</p>
-      </div>
-    );
-  }
-
-  const kendiSecilenEczane =
-    kendiBolgeEczaneleri.length > 0
-      ? kendiBolgeEczaneleri[currentEczane]
-      : null;
-
   return (
-    <div className="accordion">
-      {kendiSecilenEczane ? (
+    <div
+      ref={containerRef}
+      className="accordion"
+      style={{ position: "relative", backgroundColor: "red" }}
+    >
+      {/* Tam ekran toggle butonu */}
+      {showFullscreenBtn && (
+        <button
+          onClick={toggleFullScreen}
+          className="fullscreen-btn"
+          aria-label={isFullScreen ? "Tam Ekrandan Çık" : "Tam Ekran Aç"}
+          title={isFullScreen ? "Tam Ekrandan Çık" : "Tam Ekran Aç"}
+        >
+          {isFullScreen ? "✕" : "⛶"}
+        </button>
+      )}
+
+      {/* Resim slider veya nöbetçi eczane göster */}
+      {isResimZamani ? (
+        <ResimSablonu />
+      ) : loading ? (
+        <div className="loading-container">
+          <div className="spinner"></div>
+          <p className="loading-text">Yükleniyor...</p>
+        </div>
+      ) : hata ? (
+        <div className="error-message">
+          <p>⚠️ Hata: {hata}</p>
+        </div>
+      ) : kendiBolgeEczaneleri.length > 0 ? (
         <AccordionItemKendiBolge
-          key={`kendi-${kendiSecilenEczane.Adi}`}
-          title={kendiSecilenEczane.Adi}
-          latitude={kendiSecilenEczane.LokasyonX}
-          longitude={kendiSecilenEczane.LokasyonY}
-          adres={kendiSecilenEczane.Adres}
-          telefon={kendiSecilenEczane.Telefon}
-          bolgeId={kendiSecilenEczane.BolgeId}
-          bolge={kendiSecilenEczane.Bolge}
+          key={`kendi-${kendiBolgeEczaneleri[currentEczane].Adi}`}
+          title={kendiBolgeEczaneleri[currentEczane].Adi}
+          latitude={kendiBolgeEczaneleri[currentEczane].LokasyonX}
+          longitude={kendiBolgeEczaneleri[currentEczane].LokasyonY}
+          adres={kendiBolgeEczaneleri[currentEczane].Adres}
+          telefon={kendiBolgeEczaneleri[currentEczane].Telefon}
+          bolgeId={kendiBolgeEczaneleri[currentEczane].BolgeId}
+          bolge={kendiBolgeEczaneleri[currentEczane].Bolge}
         />
       ) : (
         <div className="no-eczane-message">
@@ -180,6 +270,8 @@ export default function NobetciEczaneler() {
     </div>
   );
 }
+
+// Diğer bileşenler
 
 function AccordionItemKendiBolge({
   title,
