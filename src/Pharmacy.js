@@ -14,7 +14,7 @@ const fetchWithRetry = async (
       return await response.json();
     } catch (err) {
       if (i < retries - 1) {
-        const delay = baseDelay * Math.pow(2, i); // 1s, 2s, 4s, 8s, 16s...
+        const delay = baseDelay * Math.pow(2, i);
         console.warn(
           `Deneme ${i + 1} başarısız. ${delay}ms sonra tekrar deneniyor...`
         );
@@ -61,7 +61,6 @@ function ResimSablonu() {
 
   useEffect(() => {
     const currentDuration = index === 0 ? 60000 : 15000;
-
     const timeout = setTimeout(() => {
       setFade(false);
       setTimeout(() => {
@@ -69,7 +68,6 @@ function ResimSablonu() {
         setImageLoaded(false);
       }, 300);
     }, currentDuration);
-
     return () => clearTimeout(timeout);
   }, [index]);
 
@@ -93,29 +91,33 @@ function ResimSablonu() {
 
 export default function NobetciEczaneler() {
   const containerRef = useRef(null);
-
   const [isFullScreen, setIsFullScreen] = useState(false);
-
   const [showFullscreenBtn, setShowFullscreenBtn] = useState(true);
+  const [eczaneler, setEczaneler] = useState(() => {
+    // Başlangıçta localStorage’dan varsa getir
+    const stored = localStorage.getItem("eczaneler");
+    return stored ? JSON.parse(stored) : [];
+  });
+  const [loading, setLoading] = useState(eczaneler.length === 0); // ilk başta veri yoksa loading true
+  const [hata, setHata] = useState(null);
+
+  const [currentEczane, setCurrentEczane] = useState(() => {
+    const savedIndex = localStorage.getItem("currentEczaneIndex");
+    return savedIndex ? parseInt(savedIndex, 10) : 0;
+  });
+
+  const [currentTime, setCurrentTime] = useState(new Date());
 
   const toggleFullScreen = () => {
+    const el = containerRef.current || document.documentElement;
     if (!isFullScreen) {
-      const el = containerRef.current || document.documentElement;
-      if (el.requestFullscreen) {
-        el.requestFullscreen();
-      } else if (el.webkitRequestFullscreen) {
-        el.webkitRequestFullscreen();
-      } else if (el.msRequestFullscreen) {
-        el.msRequestFullscreen();
-      }
+      if (el.requestFullscreen) el.requestFullscreen();
+      else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+      else if (el.msRequestFullscreen) el.msRequestFullscreen();
     } else {
-      if (document.exitFullscreen) {
-        document.exitFullscreen();
-      } else if (document.webkitExitFullscreen) {
-        document.webkitExitFullscreen();
-      } else if (document.msExitFullscreen) {
-        document.msExitFullscreen();
-      }
+      if (document.exitFullscreen) document.exitFullscreen();
+      else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+      else if (document.msExitFullscreen) document.msExitFullscreen();
     }
   };
 
@@ -172,15 +174,18 @@ export default function NobetciEczaneler() {
     };
   }, [isFullScreen]);
 
-  const [eczaneler, setEczaneler] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [hata, setHata] = useState(null);
-  const [currentEczane, setCurrentEczane] = useState(0);
-  const [currentTime, setCurrentTime] = useState(new Date());
-
   const getData = async () => {
-    setLoading(true);
+    const eskiVeri = localStorage.getItem("eczaneler");
+
+    if (eskiVeri) {
+      setEczaneler(JSON.parse(eskiVeri));
+      setLoading(false); // Hemen eski veriyi göster
+    } else {
+      setLoading(true); // Eski veri yoksa, sadece o zaman loading göster
+    }
+
     setHata(null);
+
     try {
       const data = await fetchWithRetry(
         "https://openapi.izmir.bel.tr/api/ibb/nobetcieczaneler",
@@ -189,19 +194,20 @@ export default function NobetciEczaneler() {
         1000
       );
       setEczaneler(data);
-      setLoading(false);
+      localStorage.setItem("eczaneler", JSON.stringify(data));
     } catch (error) {
+      console.error("API Hatası:", error.message);
       setHata(error.message);
+      // burada tekrar eski veri çekmene gerek yok, zaten yukarıda yüklendi
+    } finally {
       setLoading(false);
     }
   };
 
-  // İlk veri yüklemesi
   useEffect(() => {
     getData();
   }, []);
 
-  // Hata durumunda 5 saniye sonra otomatik tekrar dene
   useEffect(() => {
     if (!hata) return;
     const retryTimeout = setTimeout(() => {
@@ -218,13 +224,10 @@ export default function NobetciEczaneler() {
   }, []);
 
   const now = currentTime;
-
   const startTime = new Date(now);
-  startTime.setHours(9, 0, 0, 0); // 09:00:00
-
+  startTime.setHours(9, 0, 0, 0);
   const endTime = new Date(now);
-  endTime.setHours(19, 0, 0, 0); // 19:00:00
-
+  endTime.setHours(19, 0, 0, 0);
   const isResimZamani = now >= startTime && now < endTime;
 
   const kendiBolgeEczaneleri = useMemo(() => {
@@ -233,16 +236,25 @@ export default function NobetciEczaneler() {
   }, [eczaneler]);
 
   useEffect(() => {
-    setCurrentEczane(0);
-  }, [kendiBolgeEczaneleri.length]);
+    if (currentEczane >= kendiBolgeEczaneleri.length) {
+      setCurrentEczane(0);
+      localStorage.setItem("currentEczaneIndex", "0");
+    }
+    if (kendiBolgeEczaneleri.length === 0 && currentEczane !== 0) {
+      setCurrentEczane(0);
+      localStorage.setItem("currentEczaneIndex", "0");
+    }
+  }, [kendiBolgeEczaneleri.length, currentEczane]);
 
   useEffect(() => {
     if (kendiBolgeEczaneleri.length < 2) return;
 
     const interval = setInterval(() => {
-      setCurrentEczane(
-        (prevIndex) => (prevIndex + 1) % kendiBolgeEczaneleri.length
-      );
+      setCurrentEczane((prevIndex) => {
+        const nextIndex = (prevIndex + 1) % kendiBolgeEczaneleri.length;
+        localStorage.setItem("currentEczaneIndex", nextIndex.toString());
+        return nextIndex;
+      });
     }, 15000);
 
     return () => clearInterval(interval);
@@ -254,7 +266,6 @@ export default function NobetciEczaneler() {
       className="accordion"
       style={{ position: "relative", backgroundColor: "red" }}
     >
-      {/* Tam ekran toggle butonu */}
       {showFullscreenBtn && (
         <button
           onClick={toggleFullScreen}
@@ -266,17 +277,12 @@ export default function NobetciEczaneler() {
         </button>
       )}
 
-      {/* Resim slider veya nöbetçi eczane göster */}
       {isResimZamani ? (
         <ResimSablonu />
       ) : loading ? (
         <div className="loading-container">
           <div className="spinner"></div>
           <p className="loading-text">Yükleniyor...</p>
-        </div>
-      ) : hata ? (
-        <div className="error-message">
-          <p>⚠️ Hata: {hata}</p>
         </div>
       ) : kendiBolgeEczaneleri.length > 0 ? (
         <AccordionItemKendiBolge
@@ -303,8 +309,6 @@ export default function NobetciEczaneler() {
     </div>
   );
 }
-
-// Diğer bileşenler
 
 function AccordionItemKendiBolge({
   title,
@@ -351,7 +355,7 @@ function AccordionItemKendiBolge({
           <QRCodeCanvas value={googleMapsUrl} size={300} />
           <div className="qrText">
             <p>
-              Konum için <br /> QR Kod
+              Konum için <br /> QR kodu okutun
             </p>
           </div>
         </div>
