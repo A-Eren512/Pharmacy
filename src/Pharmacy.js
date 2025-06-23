@@ -1,6 +1,31 @@
 import React, { useEffect, useMemo, useState, useRef } from "react";
 import { QRCodeCanvas } from "qrcode.react";
 
+const fetchWithRetry = async (
+  url,
+  options = {},
+  retries = 5,
+  baseDelay = 1000
+) => {
+  for (let i = 0; i < retries; i++) {
+    try {
+      const response = await fetch(url, options);
+      if (!response.ok) throw new Error("API yanıtı başarısız oldu.");
+      return await response.json();
+    } catch (err) {
+      if (i < retries - 1) {
+        const delay = baseDelay * Math.pow(2, i); // 1s, 2s, 4s, 8s, 16s...
+        console.warn(
+          `Deneme ${i + 1} başarısız. ${delay}ms sonra tekrar deneniyor...`
+        );
+        await new Promise((res) => setTimeout(res, delay));
+      } else {
+        throw err;
+      }
+    }
+  }
+};
+
 const resimler = [
   "/images/welcome.jpg",
   "/images/reklam-1.jpg",
@@ -153,21 +178,37 @@ export default function NobetciEczaneler() {
   const [currentEczane, setCurrentEczane] = useState(0);
   const [currentTime, setCurrentTime] = useState(new Date());
 
+  const getData = async () => {
+    setLoading(true);
+    setHata(null);
+    try {
+      const data = await fetchWithRetry(
+        "https://openapi.izmir.bel.tr/api/ibb/nobetcieczaneler",
+        {},
+        5,
+        1000
+      );
+      setEczaneler(data);
+      setLoading(false);
+    } catch (error) {
+      setHata(error.message);
+      setLoading(false);
+    }
+  };
+
+  // İlk veri yüklemesi
   useEffect(() => {
-    fetch("https://openapi.izmir.bel.tr/api/ibb/nobetcieczaneler")
-      .then((response) => {
-        if (!response.ok) throw new Error("Ağ(API) yanıtı başarısız oldu.");
-        return response.json();
-      })
-      .then((data) => {
-        setEczaneler(data);
-        setLoading(false);
-      })
-      .catch((error) => {
-        setHata(error.message);
-        setLoading(false);
-      });
+    getData();
   }, []);
+
+  // Hata durumunda 5 saniye sonra otomatik tekrar dene
+  useEffect(() => {
+    if (!hata) return;
+    const retryTimeout = setTimeout(() => {
+      getData();
+    }, 5000);
+    return () => clearTimeout(retryTimeout);
+  }, [hata]);
 
   useEffect(() => {
     const timer = setInterval(() => {
